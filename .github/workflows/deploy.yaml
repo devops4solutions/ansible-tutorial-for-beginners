@@ -23,3 +23,7 @@ jobs:
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
           chmod 644 ~/.ssh/id_rsa.pub
         shell: bash
+      - name: Execute Ansible Playbook
+        run: |
+          ansible-playbook -i "10.0.1.62" -u ec2-user -m ping
+        shell: bash
