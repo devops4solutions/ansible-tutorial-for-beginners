@@ -6,7 +6,7 @@ resource "aws_instance" "this" {
   security_groups = [aws_security_group.sg.id]
   associate_public_ip_address = true
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tpl", {
-    ssh_public_key = var.ansible_user_password
+    ansible_user_password = var.ansible_user_password
   }))
 }
 
