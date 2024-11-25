@@ -8,9 +8,11 @@ on:
     branches: [ main ]
 jobs:
   terraform:
+    defaults:
+       run:
+        working-directory: ansible_master_node
     name:  Terraform Deployment-${{ matrix.environment }}
     runs-on: [ ubuntu-latest ]
-    working-directory: ansible_master_node
     strategy:
       max-parallel: 1
       matrix:
