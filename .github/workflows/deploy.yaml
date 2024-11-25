@@ -1,29 +1,45 @@
-name: SSH Key Setup for Ansible
-
+name: "Ansible Master Node Setup"
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-
+  pull_request:
+    branches: [ main ]
 jobs:
-  setup-ssh:
-    runs-on: ubuntu-latest
-
+  terraform:
+    name:  Terraform Deployment-${{ matrix.environment }}
+    runs-on: [ ubuntu-latest ]
+    working-directory: ansible_master_node
+    strategy:
+      max-parallel: 1
+      matrix:
+        include:
+            - environment: dev
+    env:
+      TF_VAR_ansible_user_password: ${{ secrets.ansible_user_password}}
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Step 2: Configure SSH keys
-      - name: Add SSH private key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-          chmod 644 ~/.ssh/id_rsa.pub
-        shell: bash
-      - name: Execute Ansible Playbook
-        run: |
-          ansible-playbook -i "10.0.1.62" -u ec2-user -m ping
-        shell: bash
+    - uses: actions/checkout@v2
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.INFRA_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.INFRA_AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - uses: hashicorp/setup-terraform@v1
+      with:
+          terraform_wrapper: false
+    - name: Terraform Init
+      id: init
+      run: |
+        rm -rf .terraform
+        terraform init -backend-config=backend.tfvars -upgrade=true -no-color -input=false
+    - name: Terraform Plan
+      id: plan
+      run: |
+        terraform plan -no-color
+    - name: Terraform apply
+      if: github.ref == 'refs/heads/main'
+      id: apply
+      run: |
+        terraform apply -no-color --auto-approve=true
