@@ -2,7 +2,7 @@ resource "aws_instance" "this" {
   ami                     = "ami-0453ec754f44f9a4a"
   instance_type           = "t2.micro"
   key_name                = "ansible"
-  subnet_id               = data.aws_subnets.public_subnets.ids
+  subnet_id               = data.aws_subnets.public_subnets.ids[0]
   security_groups = [aws_security_group.sg.id]
   associate_public_ip_address = true
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tpl", {
