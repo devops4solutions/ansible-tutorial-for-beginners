@@ -1,13 +1,14 @@
 resource "aws_instance" "this" {
-  ami                     = "ami-0453ec754f44f9a4a"
-  instance_type           = "t2.micro"
-  key_name                = "ansible"
-  subnet_id               = data.aws_subnets.public_subnets.ids[0]
-  security_groups = [aws_security_group.sg.id]
+  ami                         = "ami-0453ec754f44f9a4a"
+  instance_type               = "t2.micro"
+  key_name                    = "ansible"
+  subnet_id                   = data.aws_subnets.public_subnets.ids[0]
+  security_groups             = [aws_security_group.sg.id]
   associate_public_ip_address = true
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tpl", {
     ansible_user_password = var.ansible_user_password
   }))
+  tags = { "Name" = "ansibe-master-node" }
 }
 
 resource "aws_security_group" "sg" {
@@ -18,7 +19,7 @@ resource "aws_security_group" "sg" {
   ingress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"                        # Allows all protocols
+    protocol    = "-1"                               # Allows all protocols
     cidr_blocks = [data.aws_vpc.selected.cidr_block] # VPC CIDR block
   }
 
