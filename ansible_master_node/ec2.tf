@@ -12,7 +12,7 @@ resource "aws_instance" "this" {
 
 resource "aws_security_group" "sg" {
   name        = "${lower(var.environment)}-ansible-master-sg"
-  description = "Security group for EC2 Instances"ß
+  description = "Security group for EC2 Instances"
   vpc_id      = var.vpc_id
   # Ingress rule to allow traffic within the VPC
   ingress {
