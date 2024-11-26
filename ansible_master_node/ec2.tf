@@ -2,7 +2,7 @@ resource "aws_instance" "this" {
   ami                     = "ami-0453ec754f44f9a4a"
   instance_type           = "t2.micro"
   key_name                = "ansible"
-  subnet_id               = data.aws_subnets.public_subnets.id
+  subnet_id               = data.aws_subnets.public_subnets.ids
   security_groups = [aws_security_group.sg.id]
   associate_public_ip_address = true
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tpl", {
@@ -12,7 +12,7 @@ resource "aws_instance" "this" {
 
 resource "aws_security_group" "sg" {
   name        = "${lower(var.environment)}-ansible-master-sg"
-  description = "Security group for EC2 Instances"
+  description = "Security group for EC2 Instances"ß
   vpc_id      = var.vpc_id
   # Ingress rule to allow traffic within the VPC
   ingress {
