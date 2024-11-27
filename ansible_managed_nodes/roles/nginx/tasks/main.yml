@@ -1,0 +1,12 @@
+---
+# tasks/main.yml
+- name: Install NGINX
+  package:
+    name: nginx
+    state: present
+
+- name: Start NGINX service
+  service:
+    name: nginx
+    state: started
+    enabled: yes

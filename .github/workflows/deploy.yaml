@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    path:
+     - 'ansible_master_node/**'
   pull_request:
     branches: [ main ]
 jobs:

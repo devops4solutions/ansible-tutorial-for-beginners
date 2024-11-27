@@ -1,0 +1,5 @@
+---
+# vars/main.yml
+nginx_user: nginx
+nginx_group: nginx
+
