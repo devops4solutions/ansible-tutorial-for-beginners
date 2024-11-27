@@ -43,3 +43,11 @@ Separation of Concerns: Different aspects of the role are divided into tasks, ha
 Idempotency: The tasks ensure that NGINX is installed, started, and enabled without being repeated unnecessarily on subsequent runs.
 Scalability: The use of Ansible inventory groups allows for easy scaling to multiple web servers by adding them to the webservers group in the inventory file.
 Use of become: The become: yes directive ensures that tasks requiring elevated privileges (like package installation and starting services) are executed with sudo.
+
+
+Issues
+1. Nginx stuck becaue private sunet doesnt have NATgateway so no conencity with internet
+
+
+Drawbacks of Ansible
+1. If you want to destroy ebverything you need to write the playbook for doing the destroy . in terraform you can just run terraform destroygit 
